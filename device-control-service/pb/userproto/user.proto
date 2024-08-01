@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+option go_package = "./userproto";
+
+service UserService {
+    rpc CreateUser(UserRequest) returns(UserResponse);
+    rpc Login(LoginRequest) returns(UserResponse);
+    rpc GetByIdUser(GetUserRequest) returns(User);
+    rpc GetUsers(Empty) returns(ListUser);
+    rpc UpdateUser(Request) returns (UpdateResponse);
+    rpc UpdatePassword(UpdateUserRequest) returns(UpdateResponse);
+    rpc UpdateEmail(UpdateEmailRequest) returns(UpdateResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (UpdateResponse);
+}
+
+message Empty {}
+
+message ListUser {
+    repeated User user = 1;
+}
+
+message Request {
+    string user_id = 1;
+    string user_name = 2;
+    Profile profile = 3;
+}
+
+message User {
+    string user_id = 1;
+    string user_name = 2;
+    string email = 3;
+    string password = 4;
+    Profile profile = 5;
+}
+
+message GetUserRequest {
+    string user_id = 1;
+}
+
+message UpdateEmailRequest {
+    string user_id = 1;
+    string old_email = 2;
+    string new_email = 3;
+}
+
+message UpdateUserRequest {
+    string user_id = 1;
+    string old_password = 2;
+    string new_password = 3;
+}
+
+message UserRequest {
+    string user_name = 1;
+    string email = 2;
+    string password = 3;
+    string confirm_password = 4;
+    Profile profile = 5;
+}
+
+message DeleteUserRequest {
+    string user_id = 1;
+}
+
+message UserResponse {
+    string message = 1;
+    string token = 2;
+}
+
+message UpdateResponse {
+    string message = 1;
+}
+
+message Profile {
+    string name = 1;
+    string address = 2;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message UserDetailResponse {
+    string id = 1;
+    string user_name = 2;
+    string email = 3;
+    Profile profile = 4;
+}

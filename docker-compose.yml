@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.12-alpine
+    container_name: rabbitmq
+    ports:
+      - "5673:5672"
+    volumes:
+      - /absolute/path/to/data/:/var/lib/rabbitmq
+      - /absolute/path/to/log/:/var/log/rabbitmq
+    restart: always
+
+  api-gateway:
+    build: ./apigateway
+    container_name: api-gateway
+    ports:
+      - "7778:7777"
+    depends_on:
+      - user-service
+      - device-service
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "8888:8888"
+    environment:
+      - MONGO_URL=mongodb://user-mongodb:27017
+      - REDIS_URL=redis://user-redis:6379
+    depends_on:
+      - user-mongodb
+      - user-redis
+
+  device-service:
+    build: ./device-control-service
+    container_name: device-service
+    ports:
+      - "9999:9999"
+    environment:
+      - MONGO_URL=mongodb://device-mongodb:27017
+      - REDIS_URL=redis://device-redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - device-mongodb
+      - device-redis
+      - rabbitmq
+
+  user-mongodb:
+    image: mongo:latest
+    container_name: user-mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - user-mongo-data:/data/db
+
+  user-redis:
+    image: redis:latest
+    container_name: user-redis
+    ports:
+      - "6380:6379"
+
+  device-mongodb:
+    image: mongo:latest
+    container_name: device-mongodb
+    ports:
+      - "27019:27017"
+    volumes:
+      - device-mongo-data:/data/db
+
+  device-redis:
+    image: redis:latest
+    container_name: device-redis
+    ports:
+      - "6381:6379"
+
+volumes:
+  user-mongo-data:
+  device-mongo-data:

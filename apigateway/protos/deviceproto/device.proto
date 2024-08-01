@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+option go_package = "./deviceproto";
+
+service DeviceService {
+    rpc CreateDevice(DeviceRequest) returns (DeviceResponse);
+    rpc GetDeviceById(DeviceResponse) returns (Device);
+    rpc UpdateDevice (Device) returns(DeviceOperationResponse);
+    rpc DeleteDevice (DeviceResponse) returns(DeviceOperationResponse);
+
+    rpc CreateCommand(CommandRequest) returns (CommandResponse);
+    rpc GetCommandById(CommandResponse) returns (Command);
+}
+
+message DeviceOperationResponse {
+    string message = 1;
+}
+
+message Device {
+    string device_id = 1;
+    string user_id = 2;
+    string device_type = 3;
+    string device_name = 4;
+    string device_status = 5;
+    Configuration_Settings configuration_settings = 6;
+    string last_updated = 7;
+    string location = 8;
+    string firmware_version = 9;
+    string connectivity_status = 10;
+}
+
+message Configuration_Settings {
+    int32 brightness = 1;
+    string color = 2;
+}
+
+message Command {
+    string id = 1;
+    string device_id = 2;
+    string user_id = 3;
+    string type = 4;
+    Command_Payload command_payload = 5;
+    string timeStamp = 6;
+    string status = 7;
+}
+
+message Command_Payload {
+    int32 brightness = 1;
+}
+
+message DeviceRequest {
+    string user_id = 1;
+    string device_type = 2;
+    string device_name = 3;
+    string device_status = 4;
+    Configuration_Settings configuration_settings = 5;
+    string last_updated = 6;
+    string location = 7;
+    string firmware_version = 8;
+    string connectivity_status = 9;
+}
+
+message DeviceResponse {
+    string device_id = 1;
+}
+
+message CommandRequest {
+    string device_id = 1;
+    string user_id = 2;
+    string type = 3;
+    Command_Payload command_payload = 4;
+    string timeStamp = 5;
+    string status = 6;
+}
+
+message CommandResponse {
+    string id = 1;
+}
