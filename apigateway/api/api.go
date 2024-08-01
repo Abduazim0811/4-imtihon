@@ -26,7 +26,7 @@ func Routes() {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.POST("/users", userHandler.CreateUser)
-	router.POST("/verify", userHandler.VerifyCode)
+	router.POST("/verifycode", userHandler.VerifyCode)
 	router.POST("/login", userHandler.Login)
 	router.GET("/users/:id", jwt.Protected(), userHandler.GetByIdUser)
 	router.GET("/users", userHandler.GetUsers)
